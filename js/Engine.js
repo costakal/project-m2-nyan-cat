@@ -15,6 +15,10 @@ class Engine {
     // that contains instances of the Enemy class
     this.enemies = [];
     // We add the background image to the game
+    this.totalPoints = new Text(this.root, 25, 20);
+
+    this.newlevel = new Text(this.root, 930, 20);
+
     addBackground(this.root);
   }
 
@@ -22,6 +26,7 @@ class Engine {
   //  - Updates the enemy positions
   //  - Detects a collision between the player and any enemy
   //  - Removes enemies that are too low from the enemies array
+
   gameLoop = () => {
     // This code is to see how much time, in milliseconds, has elapsed since the last
     // time this method was called.
@@ -54,10 +59,45 @@ class Engine {
       this.enemies.push(new Enemy(this.root, spot));
     }
 
+    if (POINTS_TRACKER > 250) {
+      CURRENT_LEVEL = 2;
+      MAX_ENEMIES = 2;
+    }
+    if (POINTS_TRACKER > 1500) {
+      CURRENT_LEVEL = 3;
+      MAX_ENEMIES = 3;
+    }
+    if (POINTS_TRACKER > 4000) {
+      CURRENT_LEVEL = 4;
+      MAX_ENEMIES = 4;
+    }
+    if (POINTS_TRACKER > 10500) {
+      CURRENT_LEVEL = 5;
+      MAX_ENEMIES = 5;
+    }
+    if (POINTS_TRACKER > 24000) {
+      CURRENT_LEVEL = 6;
+      MAX_ENEMIES = 6;
+    }
+    if (POINTS_TRACKER > 50000) {
+      CURRENT_LEVEL = 6;
+      MAX_ENEMIES = 6;
+    }
+
+    this.totalPoints.update(`Score: ${POINTS_TRACKER}`);
+
+    this.newlevel.update(`Level: ${CURRENT_LEVEL}`);
+
     // We check if the player is dead. If he is, we alert the user
     // and return from the method (Why is the return statement important?)
     if (this.isPlayerDead()) {
-      window.alert("Game over");
+      let gameOver = new Text(this.root, GAME_WIDTH / 2 - 50, GAME_HEIGHT / 2);
+      gameOver.update("You Lose!");
+      // ********************************************** NEEDS TO BE FIXED ******************************************************//
+      restartButton = () => {
+        location.reload();
+      };
+      // ********************************************** NEEDS TO BE FIXED ******************************************************//
       return;
     }
 
@@ -70,11 +110,12 @@ class Engine {
   isPlayerDead = () => {
     let deadPlayer = false;
     this.enemies.forEach((enemy) => {
-      console.log(this.player.y);
-      console.log(enemy.y);
       if (
-        enemy.y >= this.player.y - ENEMY_HEIGHT + 25 &&
-        enemy.x === this.player.x
+        enemy.y < this.player.y + ENEMY_HEIGHT &&
+        enemy.y + ENEMY_HEIGHT > this.player.y &&
+        enemy.y >= this.player.y - ENEMY_HEIGHT + 35 &&
+        enemy.x < this.player.x + ENEMY_WIDTH &&
+        enemy.x + ENEMY_WIDTH > this.player.x
       ) {
         deadPlayer = true;
       }
@@ -82,3 +123,19 @@ class Engine {
     return deadPlayer;
   };
 }
+
+// *************    ORIGINAL FUNCTION FOR ISPLAYERDEAD!! DO NOT DELETE UNTIL EVERYTHING WORKS!!!!!!!!!!! *****************
+// isPlayerDead = () => {
+//   let deadPlayer = false;
+//   this.enemies.forEach((enemy) => {
+//     if (
+//       enemy.y >= this.player.y - ENEMY_HEIGHT + 50 &&
+//       enemy.y <= GAME_HEIGHT - 55 &&
+//       enemy.x === this.player.x
+//     ) {
+//       deadPlayer = true;
+//     }
+//   });
+//   return deadPlayer;
+// };
+// *************    ORIGINAL FUNCTION FOR IS PLAYER DEAD!! DO NOT DELETE UNTIL EVERYTHING WORKS!!!!!!!!!!! *****************

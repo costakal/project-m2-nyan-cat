@@ -18,9 +18,30 @@ const keydownHandler = (event) => {
   if (event.code === "ArrowRight") {
     gameEngine.player.moveRight();
   }
+
+  if (event.code === "ArrowUp") {
+    gameEngine.player.moveUp();
+  }
+
+  if (event.code === "ArrowDown") {
+    gameEngine.player.moveDown();
+  }
+
+  if (event.code === "Space") {
+    gameEngine.Engine.restartGame();
+  }
 };
 
 // We add an event listener to document. document the ancestor of all DOM nodes in the DOM.
+
+// ********************************************** NEEDS TO BE FIXED ******************************************************//
+
+// document.addEventListener("click", startMenu);
+
+// IDEA: add an event listener --> create/append a start button --> once the "clicked" then run the game loop.
+
+// ********************************************** NEEDS TO BE FIXED ******************************************************//
+
 document.addEventListener("keydown", keydownHandler);
 
 // We call the gameLoop method to start the game
