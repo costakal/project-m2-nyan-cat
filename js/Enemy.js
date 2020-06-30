@@ -81,7 +81,7 @@ class Enemy {
       this.root.removeChild(this.domElement);
 
       this.destroyed = true;
-      POINTS_TRACKER += 50;
+      POINTS_TRACKER += 100;
     }
   }
 

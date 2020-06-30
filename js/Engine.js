@@ -29,16 +29,22 @@ class Engine {
     this.root.appendChild(this.addMusic);
 
     this.gameOverMusic = document.createElement("audio");
-    this.gameOverMusic.src = "sound/music-long.mp3";
+    this.gameOverMusic.src = "sound/gameover-sound.mp3";
     this.gameOverMusic.style.display = "none";
     this.gameOverMusic.id = "gameover-tune";
     this.root.appendChild(this.gameOverMusic);
 
+    this.fireSound = document.createElement("audio");
+    this.fireSound.src = "sound/fire-sound.mp3";
+    this.fireSound.style.display = "none";
+    this.fireSound.id = "fire-sound";
+    this.root.appendChild(this.fireSound);
+
     document.addEventListener("keydown", (event) => {
       if (event.code === "Space" && this.ammo > 0) {
         this.fireBalls.push(new Fireball(this.root, this.player));
-        this.fireDamage();
         this.ammo -= 1;
+        this.fireSound.play();
         if (this.ammo < 1) {
           this.player.domElement.src = "images/wizard.gif";
           this.poweredUp.update(``);
@@ -61,9 +67,8 @@ class Engine {
   gameLoop = () => {
     // controls my audio file within the gameloop.
     let audioFile = document.getElementById("audiofile");
-    // let gameoverMusic = document.getElementById("gameover-tune");
 
-    // audioFile.play();
+    audioFile.play();
 
     // This code is to see how much time, in milliseconds, has elapsed since the last
     // time this method was called.
@@ -118,45 +123,47 @@ class Engine {
       this.enemies.push(new Enemy(this.root, spot));
     }
 
+    this.fireDamage();
+
     while (this.powerUps.length < MAX_POWERUPS) {
       const powerUpSpot = nextPowerUpSpot(this.powerUps);
       this.powerUps.push(new PowerUp(this.root, powerUpSpot));
     }
 
     // Determines what level you are at based on how many points you have.
-    if (POINTS_TRACKER > 250) {
+    if (POINTS_TRACKER > 500) {
       CURRENT_LEVEL = 2;
       MAX_ENEMIES = 2;
     }
-    if (POINTS_TRACKER > 1200) {
+    if (POINTS_TRACKER > 3000) {
       CURRENT_LEVEL = 3;
       MAX_ENEMIES = 3;
     }
-    if (POINTS_TRACKER > 4000) {
+    if (POINTS_TRACKER > 8000) {
       CURRENT_LEVEL = 4;
       MAX_ENEMIES = 4;
     }
-    if (POINTS_TRACKER > 8500) {
+    if (POINTS_TRACKER > 12000) {
       CURRENT_LEVEL = 5;
       MAX_ENEMIES = 5;
     }
-    if (POINTS_TRACKER > 12000) {
+    if (POINTS_TRACKER > 18000) {
       CURRENT_LEVEL = 6;
       MAX_ENEMIES = 6;
     }
-    if (POINTS_TRACKER > 20000) {
+    if (POINTS_TRACKER > 25000) {
       CURRENT_LEVEL = 7;
       MAX_ENEMIES = 7;
     }
-    if (POINTS_TRACKER > 30000) {
+    if (POINTS_TRACKER > 35000) {
       CURRENT_LEVEL = 8;
       MAX_ENEMIES = 8;
     }
-    if (POINTS_TRACKER > 40000) {
+    if (POINTS_TRACKER > 50000) {
       CURRENT_LEVEL = 9;
       MAX_ENEMIES = 9;
     }
-    if (POINTS_TRACKER > 50000) {
+    if (POINTS_TRACKER > 80000) {
       CURRENT_LEVEL = 10;
       MAX_ENEMIES = 10;
     }
@@ -171,6 +178,9 @@ class Engine {
     if (this.isPlayerDead()) {
       audioFile.pause();
       audioFile.currentTime = 0;
+
+      let gameoverMusic = document.getElementById("gameover-tune");
+      gameoverMusic.play();
 
       const restartGame = document.getElementById("app");
 
@@ -199,6 +209,11 @@ class Engine {
         restartBtn.style.display = "none";
         POINTS_TRACKER = 0;
         CURRENT_LEVEL = 1;
+        this.ammo = 0;
+        this.player.domElement.src = "images/wizard.gif";
+        MAX_ENEMIES = 1;
+        gameoverMusic.pause();
+        gameoverMusic.currentTime = 0;
       });
       return;
     }
@@ -210,7 +225,7 @@ class Engine {
     }
 
     // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
-    setTimeout(this.gameLoop, 20);
+    setTimeout(this.gameLoop, 30);
   };
 
   // This method is not implemented correctly, which is why
@@ -253,17 +268,35 @@ class Engine {
   };
 
   fireDamage = () => {
-    console.log("shot fired");
     let deadEnemy = false;
     this.fireBalls.forEach((fireBall) => {
       this.enemies.forEach((enemy) => {
+        const verticleMatch =
+          (enemy.y + ENEMY_HEIGHT > fireBall.y &&
+            enemy.y + ENEMY_HEIGHT < fireBall.y + FIREBALL_HEIGHT) ||
+          (enemy.y > fireBall.y && enemy.y < fireBall.y + FIREBALL_HEIGHT) ||
+          (enemy.y === fireBall.y + FIREBALL_HEIGHT &&
+            enemy.y + ENEMY_HEIGHT === fireBall.y);
+
+        const horizontalMatch =
+          (enemy.x + ENEMY_WIDTH > fireBall.x &&
+            enemy.x + ENEMY_WIDTH < fireBall.x + FIREBALL_WIDTH) ||
+          (enemy.x < fireBall.x + FIREBALL_WIDTH && enemy.x > fireBall.x) ||
+          (enemy.x === fireBall.x &&
+            enemy.x + ENEMY_WIDTH === fireBall.x + FIREBALL_WIDTH);
+
+        if (this.ammo < 1) {
+          this.player.y = GAME_HEIGHT - PLAYER_HEIGHT - 100;
+        }
+
         if (
-          enemy.y + ENEMY_HEIGHT > fireBall.y &&
-          enemy.y < fireBall.y + FIREBALL_HEIGHT &&
-          enemy.x === fireBall.x
+          verticleMatch &&
+          horizontalMatch &&
+          fireBall.fireBallHit === false &&
+          enemy.destroyed === false
         ) {
-          console.log("Hitting the target");
           deadEnemy = true;
+          POINTS_TRACKER += 500;
           fireBall.fireBallAttack();
           enemy.killEnemy();
         }
@@ -272,19 +305,3 @@ class Engine {
     return deadEnemy;
   };
 }
-
-// *************    ORIGINAL FUNCTION FOR ISPLAYERDEAD!! DO NOT DELETE UNTIL EVERYTHING WORKS!!!!!!!!!!! *****************
-// isPlayerDead = () => {
-//   let deadPlayer = false;
-//   this.enemies.forEach((enemy) => {
-//     if (
-//       enemy.y >= this.player.y - ENEMY_HEIGHT + 50 &&
-//       enemy.y <= GAME_HEIGHT - 55 &&
-//       enemy.x === this.player.x
-//     ) {
-//       deadPlayer = true;
-//     }
-//   });
-//   return deadPlayer;
-// };
-// *************    ORIGINAL FUNCTION FOR IS PLAYER DEAD!! DO NOT DELETE UNTIL EVERYTHING WORKS!!!!!!!!!!! *****************

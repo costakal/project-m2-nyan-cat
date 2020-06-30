@@ -58,9 +58,7 @@ startBtn.addEventListener("click", () => {
   // this allows the power ups interval to run as soon as you start the game//
   setInterval(() => {
     MAX_POWERUPS = 1;
-  }, 3000);
-
-  // }, Math.random() * 20000 + 10000);
+  }, Math.random() * 20000 + 10000);
 
   gameEngine.gameLoop();
 });
