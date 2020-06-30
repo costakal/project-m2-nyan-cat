@@ -2,6 +2,17 @@ const beginGame = document.getElementById("app");
 
 let titleName = document.createElement("h2");
 let startBtn = document.createElement("button");
+let howToPlay = document.createElement("button");
+let backToMain = document.createElement("button");
+let instructions = document.createElement("p");
+
+titleName.innerHTML = "Monster Plague";
+titleName.style.position = "absolute";
+titleName.style.left = "300px";
+titleName.style.top = "190px";
+titleName.style.fontSize = "35px";
+titleName.style.color = "white";
+titleName.style.textShadow = "2px 2px 5px black";
 
 startBtn.innerText = "Begin";
 startBtn.style.position = "absolute";
@@ -12,16 +23,18 @@ startBtn.style.background = "none";
 startBtn.style.border = "none";
 startBtn.style.color = "white";
 
-titleName.innerHTML = "Monster Plague";
-titleName.style.position = "absolute";
-titleName.style.left = "300px";
-titleName.style.top = "190px";
-titleName.style.fontSize = "35px";
-titleName.style.color = "white";
-titleName.style.textShadow = "2px 2px 5px black";
+howToPlay.innerText = "How to Play";
+howToPlay.style.position = "absolute";
+howToPlay.style.left = "420px";
+howToPlay.style.top = "350px";
+howToPlay.style.fontSize = "20px";
+howToPlay.style.background = "none";
+howToPlay.style.border = "none";
+howToPlay.style.color = "white";
 
 beginGame.appendChild(startBtn);
 beginGame.appendChild(titleName);
+beginGame.appendChild(howToPlay);
 
 startBtn.addEventListener("mouseover", function () {
   startBtn.style.color = "black";
@@ -30,18 +43,74 @@ startBtn.addEventListener("mouseout", function () {
   startBtn.style.color = "white";
 });
 
-startBtn.addEventListener("click", function () {
+howToPlay.addEventListener("mouseover", function () {
+  howToPlay.style.color = "black";
+});
+howToPlay.addEventListener("mouseout", function () {
+  howToPlay.style.color = "white";
+});
+
+startBtn.addEventListener("click", () => {
   startBtn.style.display = "none";
   titleName.style.display = "none";
+  howToPlay.style.display = "none";
 
   // this allows the power ups interval to run as soon as you start the game//
   setInterval(() => {
     MAX_POWERUPS = 1;
   }, 3000);
 
-  // }, Math.random() * 25000 + 20000);
+  // }, Math.random() * 20000 + 10000);
 
   gameEngine.gameLoop();
+});
+
+howToPlay.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  titleName.style.display = "none";
+  howToPlay.style.display = "none";
+
+  instructions.innerText =
+    "Monsters are falling from the Sky!\n\nAvoide the Monsters at all costs.\n\nUse the ⬅️ and ➡️ keys to move.\n\nDrink potions to unleash your inner demon!\n\nand then take to the sky using ⬆️ and ⬇️ keys.\n\nYou can also shoot 🔥 with the 'Space' Key\n\nJust be careful because you have limited fire power!";
+
+  instructions.style.display = "inline";
+  instructions.style.position = "absolute";
+  instructions.style.left = "80px";
+  instructions.style.top = "40px";
+  instructions.style.fontSize = "20px";
+  instructions.style.background = "none";
+  instructions.style.border = "none";
+  instructions.style.color = "white";
+  instructions.style.textShadow = "2px 2px 5px black";
+
+  beginGame.appendChild(instructions);
+
+  backToMain.innerText = "Return to Main Menu";
+  backToMain.style.display = "inline";
+  backToMain.style.position = "absolute";
+  backToMain.style.left = "350px";
+  backToMain.style.top = "400px";
+  backToMain.style.fontSize = "20px";
+  backToMain.style.background = "none";
+  backToMain.style.border = "none";
+  backToMain.style.color = "white";
+
+  beginGame.appendChild(backToMain);
+
+  backToMain.addEventListener("mouseover", function () {
+    backToMain.style.color = "black";
+  });
+  backToMain.addEventListener("mouseout", function () {
+    backToMain.style.color = "white";
+  });
+});
+
+backToMain.addEventListener("click", () => {
+  startBtn.style.display = "inline";
+  titleName.style.display = "inline";
+  howToPlay.style.display = "inline";
+  instructions.style.display = "none";
+  backToMain.style.display = "none";
 });
 
 const gameEngine = new Engine(document.getElementById("app"));

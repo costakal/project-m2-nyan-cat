@@ -18,24 +18,30 @@ class Engine {
     this.fireBalls = [];
     this.ammo = 0;
 
-    // We add the background image to the game
     this.totalPoints = new Text(this.root, 30, 25);
-
     this.newlevel = new Text(this.root, 890, 25);
-    this.poweredUp = new Text(this.root, 500, 250);
+    this.poweredUp = new Text(this.root, 860, 18);
 
     this.addMusic = document.createElement("audio");
-    this.addMusic.src = "sound/music.mp3";
+    this.addMusic.src = "sound/music-long.mp3";
     this.addMusic.style.display = "none";
     this.addMusic.id = "audiofile";
     this.root.appendChild(this.addMusic);
 
+    this.gameOverMusic = document.createElement("audio");
+    this.gameOverMusic.src = "sound/music-long.mp3";
+    this.gameOverMusic.style.display = "none";
+    this.gameOverMusic.id = "gameover-tune";
+    this.root.appendChild(this.gameOverMusic);
+
     document.addEventListener("keydown", (event) => {
       if (event.code === "Space" && this.ammo > 0) {
         this.fireBalls.push(new Fireball(this.root, this.player));
+        this.fireDamage();
         this.ammo -= 1;
         if (this.ammo < 1) {
           this.player.domElement.src = "images/wizard.gif";
+          this.poweredUp.update(``);
         }
       }
       if (event.code === "ArrowUp" && this.ammo > 0) {
@@ -43,6 +49,7 @@ class Engine {
       }
     });
 
+    // We add the background image to the game
     addBackground(this.root);
   }
 
@@ -54,7 +61,9 @@ class Engine {
   gameLoop = () => {
     // controls my audio file within the gameloop.
     let audioFile = document.getElementById("audiofile");
-    // audioFile.play(); /// IMPORTANT LINE ***********************************************************************//////
+    // let gameoverMusic = document.getElementById("gameover-tune");
+
+    // audioFile.play();
 
     // This code is to see how much time, in milliseconds, has elapsed since the last
     // time this method was called.
@@ -195,7 +204,9 @@ class Engine {
     }
 
     if (this.isPlayerPoweredUp()) {
-      this.poweredUp.update(`Fireball!!`);
+      if (this.ammo > 0) {
+        this.poweredUp.update(`🔥`);
+      }
     }
 
     // If the player is not dead, then we put a setTimeout to run the gameLoop in 20 milliseconds
@@ -242,14 +253,21 @@ class Engine {
   };
 
   fireDamage = () => {
+    console.log("shot fired");
     let deadEnemy = false;
-
     this.fireBalls.forEach((fireBall) => {
-      if (enemy.y >= fireball.y && enemy.x === fireball.x) {
-        deadEnemy = true;
-        fireBall.fireBallAttack();
-        fireBall.killEnemy();
-      }
+      this.enemies.forEach((enemy) => {
+        if (
+          enemy.y + ENEMY_HEIGHT > fireBall.y &&
+          enemy.y < fireBall.y + FIREBALL_HEIGHT &&
+          enemy.x === fireBall.x
+        ) {
+          console.log("Hitting the target");
+          deadEnemy = true;
+          fireBall.fireBallAttack();
+          enemy.killEnemy();
+        }
+      });
     });
     return deadEnemy;
   };

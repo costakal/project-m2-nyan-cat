@@ -18,6 +18,9 @@ let MAX_ENEMIES = 1;
 const PLAYER_WIDTH = 75;
 const PLAYER_HEIGHT = 54;
 
+const FIREBALL_WIDTH = 75;
+const FIREBALL_HEIGHT = 54;
+
 // Will track and update point - CK
 let POINTS_TRACKER = 0;
 let CURRENT_LEVEL = 1;
