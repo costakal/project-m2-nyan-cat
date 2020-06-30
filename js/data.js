@@ -21,3 +21,7 @@ const PLAYER_HEIGHT = 54;
 // Will track and update point - CK
 let POINTS_TRACKER = 0;
 let CURRENT_LEVEL = 1;
+
+let MAX_POWERUPS = 0;
+
+let MAX_FIREBALLS = 3;

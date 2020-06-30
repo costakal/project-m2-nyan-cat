@@ -37,7 +37,8 @@ class Enemy {
     // is why we create a property that refers to it.
     this.domElement = document.createElement("img");
 
-    // We give it a src attribute to specify which image to display.
+    // There is an array that represents the different monsters that can spawn. A new monster will spawn randomly from the array
+    // and select from a random src.
 
     this.fallingMonsters = [
       null,
@@ -82,5 +83,10 @@ class Enemy {
       this.destroyed = true;
       POINTS_TRACKER += 50;
     }
+  }
+
+  killEnemy() {
+    this.root.removeChild(this.domElement);
+    this.destroyed = true;
   }
 }

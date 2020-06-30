@@ -50,6 +50,38 @@ const nextEnemySpot = (enemies) => {
   return candidate;
 };
 
+// POWER UPs
+const nextPowerUpSpot = (powerUps) => {
+  const powerUpSpots = GAME_WIDTH / ENEMY_WIDTH;
+  const powerUpSpotsTaken = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+  ];
+
+  powerUps.forEach((powerUp) => {
+    powerUpSpotsTaken[powerUp.spot] = true;
+  });
+
+  let candidate = undefined;
+  while (candidate === undefined || powerUpSpotsTaken[candidate]) {
+    candidate = Math.floor(Math.random() * powerUpSpots);
+  }
+
+  return candidate;
+};
+
 // addBackground contains all the logic to display the starry background of the game.
 // It is a variable that refers to a function.
 // The function takes one parameter

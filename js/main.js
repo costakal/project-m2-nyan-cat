@@ -1,6 +1,53 @@
+const beginGame = document.getElementById("app");
+
+let titleName = document.createElement("h2");
+let startBtn = document.createElement("button");
+
+startBtn.innerText = "Begin";
+startBtn.style.position = "absolute";
+startBtn.style.left = "480px";
+startBtn.style.top = "300px";
+startBtn.style.fontSize = "20px";
+startBtn.style.background = "none";
+startBtn.style.border = "none";
+startBtn.style.color = "white";
+
+titleName.innerHTML = "Monster Plague";
+titleName.style.position = "absolute";
+titleName.style.left = "300px";
+titleName.style.top = "190px";
+titleName.style.fontSize = "35px";
+titleName.style.color = "white";
+titleName.style.textShadow = "2px 2px 5px black";
+
+beginGame.appendChild(startBtn);
+beginGame.appendChild(titleName);
+
+startBtn.addEventListener("mouseover", function () {
+  startBtn.style.color = "black";
+});
+startBtn.addEventListener("mouseout", function () {
+  startBtn.style.color = "white";
+});
+
+startBtn.addEventListener("click", function () {
+  startBtn.style.display = "none";
+  titleName.style.display = "none";
+
+  // this allows the power ups interval to run as soon as you start the game//
+  setInterval(() => {
+    MAX_POWERUPS = 1;
+  }, 3000);
+
+  // }, Math.random() * 25000 + 20000);
+
+  gameEngine.gameLoop();
+});
+
+const gameEngine = new Engine(document.getElementById("app"));
+
 // We create an instance of the Engine class. Looking at our index.html,
 // we see that it has a div with an id of `"app"`
-const gameEngine = new Engine(document.getElementById("app"));
 
 // keydownHandler is a variable that refers to a function. The function has one parameter
 // (does the parameter name matter?) which is called event. As we will see below, this function
@@ -19,30 +66,9 @@ const keydownHandler = (event) => {
     gameEngine.player.moveRight();
   }
 
-  if (event.code === "ArrowUp") {
-    gameEngine.player.moveUp();
-  }
-
   if (event.code === "ArrowDown") {
     gameEngine.player.moveDown();
   }
-
-  if (event.code === "Space") {
-    gameEngine.Engine.restartGame();
-  }
 };
-
 // We add an event listener to document. document the ancestor of all DOM nodes in the DOM.
-
-// ********************************************** NEEDS TO BE FIXED ******************************************************//
-
-// document.addEventListener("click", startMenu);
-
-// IDEA: add an event listener --> create/append a start button --> once the "clicked" then run the game loop.
-
-// ********************************************** NEEDS TO BE FIXED ******************************************************//
-
 document.addEventListener("keydown", keydownHandler);
-
-// We call the gameLoop method to start the game
-gameEngine.gameLoop();
