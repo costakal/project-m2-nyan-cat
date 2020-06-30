@@ -69,7 +69,7 @@ howToPlay.addEventListener("click", () => {
   howToPlay.style.display = "none";
 
   instructions.innerText =
-    "Monsters are falling from the Sky!\n\nAvoide the Monsters at all costs.\n\nUse the ⬅️ and ➡️ keys to move.\n\nDrink potions to unleash your inner demon!\n\nand then take to the sky using ⬆️ and ⬇️ keys.\n\nYou can also shoot 🔥 with the 'Space' Key\n\nJust be careful because you have limited fire power!";
+    "Monsters are falling from the Sky!\n\nAvoide the Monsters at all costs.\n\nUse the ⬅️ and ➡️ keys to move.\n\nDrink potions to unleash your inner demon!\n\nand then take to the sky using ⬆️ and ⬇️ keys.\n\nYou can also shoot 🔥 with the 'Space' Key\n\nJust be careful because you have limited\nfire power!";
 
   instructions.style.display = "inline";
   instructions.style.position = "absolute";
